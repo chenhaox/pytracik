@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Literal
 
 import numpy as np
-from . import pytracik as pytracik
+from . import pytracik_bindings as pytracik_bindings
 
 np.array([0, 0, 0, 0, ])
 
@@ -85,13 +85,13 @@ class TracIK(object):
             the param server at /robot_description.
         """
         if solver_type == "Speed":
-            _solve_type = pytracik.SolveType.Speed
+            _solve_type = pytracik_bindings.SolveType.Speed
         elif solver_type == "Distance":
-            _solve_type = pytracik.SolveType.Distance
+            _solve_type = pytracik_bindings.SolveType.Distance
         elif solver_type == "Manip1":
-            _solve_type = pytracik.SolveType.Manip1
+            _solve_type = pytracik_bindings.SolveType.Manip1
         elif solver_type == "Manip2":
-            _solve_type = pytracik.SolveType.Manip2
+            _solve_type = pytracik_bindings.SolveType.Manip2
         else:
             raise ValueError(f"Unsupported solver type: {solver_type}")
 
@@ -106,12 +106,12 @@ class TracIK(object):
         self._solve_type = _solve_type
         self.base_link_name = base_link_name
         self.tip_link_name = tip_link_name
-        self._ik_solver = pytracik.TRAC_IK(self.base_link_name,
-                                           self.tip_link_name,
-                                           self._urdf_string,
-                                           self._timeout,
-                                           self._epsilon,
-                                           self._solve_type)
+        self._ik_solver = pytracik_bindings.TRAC_IK(self.base_link_name,
+                                                    self.tip_link_name,
+                                                    self._urdf_string,
+                                                    self._timeout,
+                                                    self._epsilon,
+                                                    self._solve_type)
 
     @property
     def dof(self) -> int:
@@ -119,7 +119,7 @@ class TracIK(object):
         Get the number of joints in the chain.
         :return:  Number of joints in the chain.
         """
-        return pytracik.get_num_joints(self._ik_solver, self.base_link_name, self.tip_link_name)
+        return pytracik_bindings.get_num_joints(self._ik_solver, self.base_link_name, self.tip_link_name)
 
     def solve(self,
               tgt_pos: np.ndarray,
@@ -134,7 +134,7 @@ class TracIK(object):
         """
 
         qw, qx, qy, qz = quaternion_from_matrix(tgt_rot)
-        r = pytracik.solve(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
+        r = pytracik_bindings.solve(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
         succ = r[0]
         if succ:
             return r[1:]

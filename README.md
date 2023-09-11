@@ -84,7 +84,7 @@ TODO: Finishthe installation instructions
    
    c.  Right click the project and select `Properties`. 
       - Set the `Configuration` to `Release` and `Platform` to `Active (x64)`
-      - In the `Configuration Properites/General` tab, set the `Target Name` to `pytracik`.
+      - In the `Configuration Properites/General` tab, set the `Target Name` to `pytracik_bindings`.
       - Set the `Configuration Type` to `Dynamic Library (.dll)`.
       - Set C++ language standard to `ISO C++17 Standard (/std:c++17)`.
 

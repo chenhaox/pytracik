@@ -55,7 +55,7 @@ int getNrOfJointsInChain(TRAC_IK::TRAC_IK& t, std::string base, std::string tip)
 }
 
 
-PYBIND11_MODULE(pytracik, m) {
+PYBIND11_MODULE(pytracik_bindings, m) {
 	py::class_<TRAC_IK::TRAC_IK>(m, "TRAC_IK")
 		.def(py::init<std::string, std::string, std::string, double, double, TRAC_IK::SolveType>())
 		.def("cart_to_jnt", &TRAC_IK::TRAC_IK::CartToJnt);

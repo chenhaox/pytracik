@@ -109,6 +109,7 @@ TODO: Finishthe installation instructions
       ![img_7.png](img/img_7.png)
 5. Copy the `pytracik.pyd` file to the [pytracik](pytracik) folder.
    **Note**: if the error `ImportError: DLL load failed while importing pytracik: The specified module could not be found.` occurs, please copy the `nlopt.dll` in the `<NLopt installation path\bin>` to the [pytracik](pytracik) folder:
-
-
-
+6. Make installation:
+   ```bash
+   pip install -e .
+   ```

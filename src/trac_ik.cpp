@@ -38,12 +38,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 namespace TRAC_IK {
-    TRAC_IK::TRAC_IK(const std::string &base_link, const std::string &tip_link, const std::string &URDF_param,
-                     double _maxtime, double _eps, SolveType _type) :
-            initialized(false),
-            eps(_eps),
-            maxtime(_maxtime),
-            solvetype(_type) {
+    TRAC_IK::TRAC_IK(const std::string& base_link, const std::string& tip_link, const std::string& URDF_param,
+        double _maxtime, double _eps, SolveType _type) :
+        initialized(false),
+        eps(_eps),
+        maxtime(_maxtime),
+        solvetype(_type) {
         /*std::ifstream file(URDF_param);
         if (!file.is_open()) {
             std::cout << "cannot open the urdf file" << std::endl;
@@ -80,23 +80,26 @@ namespace TRAC_IK {
                     if (joint->safety) {
                         lower = std::max(joint->limits.value()->lower, joint->safety.value()->lower_limit);
                         upper = std::min(joint->limits.value()->upper, joint->safety.value()->upper_limit);
-                    } else {
+                    }
+                    else {
                         lower = joint->limits.value()->lower;
                         upper = joint->limits.value()->upper;
                     }
                     hasLimits = 1;
-                } else {
+                }
+                else {
                     hasLimits = 0;
                 }
                 if (hasLimits) {
                     lb(joint_num - 1) = lower;
                     ub(joint_num - 1) = upper;
-                } else {
+                }
+                else {
                     lb(joint_num - 1) = std::numeric_limits<float>::lowest();
                     ub(joint_num - 1) = std::numeric_limits<float>::max();
                 }
-                std::cout << "Trac_ik: IK Using joint " << joint->name << " " << lb(joint_num - 1) << " "
-                          << ub(joint_num - 1) << std::endl;
+                // std::cout << "Trac_ik: IK Using joint " << joint->name << " " << lb(joint_num - 1) << " "
+                //          << ub(joint_num - 1) << std::endl;
             }
         }
 
@@ -104,15 +107,15 @@ namespace TRAC_IK {
     }
 
 
-    TRAC_IK::TRAC_IK(const KDL::Chain &_chain, const KDL::JntArray &_q_min, const KDL::JntArray &_q_max,
-                     double _maxtime, double _eps, SolveType _type) :
-            initialized(false),
-            chain(_chain),
-            lb(_q_min),
-            ub(_q_max),
-            eps(_eps),
-            maxtime(_maxtime),
-            solvetype(_type) {
+    TRAC_IK::TRAC_IK(const KDL::Chain& _chain, const KDL::JntArray& _q_min, const KDL::JntArray& _q_max,
+        double _maxtime, double _eps, SolveType _type) :
+        initialized(false),
+        chain(_chain),
+        lb(_q_min),
+        ub(_q_max),
+        eps(_eps),
+        maxtime(_maxtime),
+        solvetype(_type) {
         initialize();
     }
 
@@ -133,7 +136,8 @@ namespace TRAC_IK {
                     types.push_back(KDL::BasicJointType::Continuous);
                 else
                     types.push_back(KDL::BasicJointType::RotJoint);
-            } else if (type.find("Trans") != std::string::npos)
+            }
+            else if (type.find("Trans") != std::string::npos)
                 types.push_back(KDL::BasicJointType::TransJoint);
         }
 
@@ -142,7 +146,7 @@ namespace TRAC_IK {
         initialized = true;
     }
 
-    bool TRAC_IK::unique_solution(const KDL::JntArray &sol) {
+    bool TRAC_IK::unique_solution(const KDL::JntArray& sol) {
 
         for (unsigned int i = 0; i < solutions.size(); i++)
             if (myEqual(sol, solutions[i]))
@@ -151,7 +155,7 @@ namespace TRAC_IK {
 
     }
 
-    inline void normalizeAngle(double &val, const double &min, const double &max) {
+    inline void normalizeAngle(double& val, const double& min, const double& max) {
         if (val > max) {
             //Find actual angle offset
             double diffangle = fmod(val - max, 2 * M_PI);
@@ -167,7 +171,7 @@ namespace TRAC_IK {
         }
     }
 
-    inline void normalizeAngle(double &val, const double &target) {
+    inline void normalizeAngle(double& val, const double& target) {
         double new_target = target + M_PI;
         if (val > new_target) {
             //Find actual angle offset
@@ -187,9 +191,9 @@ namespace TRAC_IK {
 
 
     template<typename T1, typename T2>
-    bool TRAC_IK::runSolver(T1 &solver, T2 &other_solver,
-                            const KDL::JntArray &q_init,
-                            const KDL::Frame &p_in) {
+    bool TRAC_IK::runSolver(T1& solver, T2& other_solver,
+        const KDL::JntArray& q_init,
+        const KDL::Frame& p_in) {
         KDL::JntArray q_out;
 
         double fulltime = maxtime;
@@ -210,13 +214,13 @@ namespace TRAC_IK {
             int RC = solver.CartToJnt(seed, p_in, q_out, bounds);
             if (RC >= 0) {
                 switch (solvetype) {
-                    case Manip1:
-                    case Manip2:
-                        normalize_limits(q_init, q_out);
-                        break;
-                    default:
-                        normalize_seed(q_init, q_out);
-                        break;
+                case Manip1:
+                case Manip2:
+                    normalize_limits(q_init, q_out);
+                    break;
+                default:
+                    normalize_seed(q_init, q_out);
+                    break;
                 }
                 mtx_.lock();
                 if (unique_solution(q_out)) {
@@ -226,17 +230,17 @@ namespace TRAC_IK {
                     mtx_.unlock();
                     double err, penalty;
                     switch (solvetype) {
-                        case Manip1:
-                            penalty = manipPenalty(q_out);
-                            err = penalty * TRAC_IK::ManipValue1(q_out);
-                            break;
-                        case Manip2:
-                            penalty = manipPenalty(q_out);
-                            err = penalty * TRAC_IK::ManipValue2(q_out);
-                            break;
-                        default:
-                            err = TRAC_IK::JointErr(q_init, q_out);
-                            break;
+                    case Manip1:
+                        penalty = manipPenalty(q_out);
+                        err = penalty * TRAC_IK::ManipValue1(q_out);
+                        break;
+                    case Manip2:
+                        penalty = manipPenalty(q_out);
+                        err = penalty * TRAC_IK::ManipValue2(q_out);
+                        break;
+                    default:
+                        err = TRAC_IK::JointErr(q_init, q_out);
+                        break;
                     }
                     mtx_.lock();
                     errors[curr_size - 1] = std::make_pair(err, curr_size - 1);
@@ -261,7 +265,7 @@ namespace TRAC_IK {
     }
 
 
-    void TRAC_IK::normalize_seed(const KDL::JntArray &seed, KDL::JntArray &solution) {
+    void TRAC_IK::normalize_seed(const KDL::JntArray& seed, KDL::JntArray& solution) {
         // Make sure rotational joint values are within 1 revolution of seed; then
         // ensure joint limits are met.
 
@@ -288,7 +292,7 @@ namespace TRAC_IK {
         }
     }
 
-    void TRAC_IK::normalize_limits(const KDL::JntArray &seed, KDL::JntArray &solution) {
+    void TRAC_IK::normalize_limits(const KDL::JntArray& seed, KDL::JntArray& solution) {
         // Make sure rotational joint values are within 1 revolution of middle of
         // limits; then ensure joint limits are met.
 
@@ -321,7 +325,7 @@ namespace TRAC_IK {
     }
 
 
-    double TRAC_IK::manipPenalty(const KDL::JntArray &arr) {
+    double TRAC_IK::manipPenalty(const KDL::JntArray& arr) {
         double penalty = 1.0;
         for (unsigned int i = 0; i < arr.data.size(); i++) {
             if (types[i] == KDL::BasicJointType::Continuous)
@@ -333,7 +337,7 @@ namespace TRAC_IK {
     }
 
 
-    double TRAC_IK::ManipValue1(const KDL::JntArray &arr) {
+    double TRAC_IK::ManipValue1(const KDL::JntArray& arr) {
         KDL::Jacobian jac(arr.data.size());
 
         jacsolver->JntToJac(arr, jac);
@@ -347,7 +351,7 @@ namespace TRAC_IK {
         return error;
     }
 
-    double TRAC_IK::ManipValue2(const KDL::JntArray &arr) {
+    double TRAC_IK::ManipValue2(const KDL::JntArray& arr) {
         KDL::Jacobian jac(arr.data.size());
 
         jacsolver->JntToJac(arr, jac);
@@ -359,12 +363,12 @@ namespace TRAC_IK {
     }
 
 
-    int TRAC_IK::CartToJnt(const KDL::JntArray &q_init, const KDL::Frame &p_in, KDL::JntArray &q_out,
-                           const KDL::Twist &_bounds) {
+    int TRAC_IK::CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out,
+        const KDL::Twist& _bounds) {
 
         if (!initialized) {
             std::cout << "TRAC-IK was not properly initialized with a valid chain or limits.  IK cannot proceed"
-                      << std::endl;
+                << std::endl;
             return -1;
         }
 
@@ -391,13 +395,13 @@ namespace TRAC_IK {
         }
 
         switch (solvetype) {
-            case Manip1:
-            case Manip2:
-                std::sort(errors.rbegin(), errors.rend()); // rbegin/rend to sort by max
-                break;
-            default:
-                std::sort(errors.begin(), errors.end());
-                break;
+        case Manip1:
+        case Manip2:
+            std::sort(errors.rbegin(), errors.rend()); // rbegin/rend to sort by max
+            break;
+        default:
+            std::sort(errors.begin(), errors.end());
+            break;
         }
 
         q_out = solutions[errors[0].second];

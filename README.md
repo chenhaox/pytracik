@@ -34,7 +34,7 @@ tgt_pos = np.array([.3, -.4, .1])
 tgt_rotmat = np.array([[0.5, 0., 0.8660254],
                      [0., 1., 0.],
                      [-0.8660254, 0., 0.5]])
-result = yumi_rgt_arm_iksolver.solve(tgt_pos, tgt_rotmat, seed_jnt_values=seed_jnt)
+result = yumi_rgt_arm_iksolver.ik(tgt_pos, tgt_rotmat, seed_jnt_values=seed_jnt)
 print(result)
 ```
 Output:

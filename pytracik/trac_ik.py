@@ -121,10 +121,10 @@ class TracIK(object):
         """
         return pytracik_bindings.get_num_joints(self._ik_solver, self.base_link_name, self.tip_link_name)
 
-    def solve(self,
-              tgt_pos: np.ndarray,
-              tgt_rot: np.ndarray,
-              seed_jnt_values: np.ndarray) -> None or np.ndarray:
+    def ik(self,
+           tgt_pos: np.ndarray,
+           tgt_rot: np.ndarray,
+           seed_jnt_values: np.ndarray) -> None or np.ndarray:
         """
         Solve the IK.
         :param tgt_pos: 1x3 target position
@@ -134,9 +134,20 @@ class TracIK(object):
         """
 
         qw, qx, qy, qz = quaternion_from_matrix(tgt_rot)
-        r = pytracik_bindings.solve(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
+        r = pytracik_bindings.ik(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
         succ = r[0]
         if succ:
             return r[1:]
         else:
             return None
+
+    def fk(self, q: np.ndarray) -> (np.ndarray, np.ndarray):
+        """
+        Forward kinematics.
+        :param q: 1xN joint values
+        :return: position and rotation matrix of the tip link
+        """
+        assert isinstance(q, np.ndarray), f"q must be a numpy array, not {type(q)}"
+        assert q.shape == (self.dof,), f"q must be a 1x{self.dof} array, not {q.shape}"
+        homomat = pytracik_bindings.fk(self._ik_solver, q)
+        return homomat[:3, 3], homomat[:3, :3]

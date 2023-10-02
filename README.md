@@ -107,9 +107,9 @@ TODO: Finishthe installation instructions
 
       ![img_5.png](img/img_6.png) 
    
-    h. Set the `Solution Configuration` to `Release` and `Solution Platform` to `x64`. Then build the project. The `pytracik.pyd` file will be generated in the `Release` folder.
+    h. Set the `Solution Configuration` to `Release` and `Solution Platform` to `x64`. Then build the project. The `pytracik_bindings.pyd` file will be generated in the `Release` folder.
       ![img_7.png](img/img_7.png)
-5. Copy the `pytracik.pyd` file to the [pytracik](pytracik) folder.
+5. Copy the `pytracik_bindings.pyd` file to the [pytracik](pytracik) folder.
    **Note**: if the error `ImportError: DLL load failed while importing pytracik: The specified module could not be found.` occurs, please copy the `nlopt.dll` in the `<NLopt installation path\bin>` to the [pytracik](pytracik) folder:
 6. Make installation (**Optional**):
    ```bash

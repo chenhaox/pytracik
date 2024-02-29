@@ -135,7 +135,7 @@ class TracIK(object):
 
         qw, qx, qy, qz = quaternion_from_matrix(tgt_rot)
         r = pytracik_bindings.ik(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
-        succ = r[0]
+        succ = r[0] >=0
         if succ:
             return r[1:]
         else:

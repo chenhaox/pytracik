@@ -35,13 +35,13 @@ py::array_t<double> CartToJnt(TRAC_IK::TRAC_IK& t,
 	for (int i = 0; i < init_q_buf.size; i++)
 		q(i) = init_q_buf_ptr[i];
 
-	bool r = t.CartToJnt(
+	int r = t.CartToJnt(
 		q,
 		KDL::Frame(KDL::Rotation::Quaternion(qx, qy, qz, qw), KDL::Vector(x, y, z)),
 		result);
 
 	result_array_buf_ptr[0] = (float)r;
-	if (r) {
+	if (r>=0) {
 		for (int i = 0; i < init_q_buf.size; i++)
 			result_array_buf_ptr[i + 1] = result(i);
 	}

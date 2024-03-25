@@ -66,8 +66,10 @@ py::array_t<double> JntToCart(TRAC_IK::TRAC_IK& t, py::array_t<double> cfg) {
 	py::buffer_info result_array_buf = result_array.request();
 	double* result_array_buf_ptr = (double*)result_array_buf.ptr;
     // If no solution, return empty vector which acts as None
-    if (rc < 0)
-        return result_array;
+	if (rc < 0) {
+		py::array_t<double> empty_array;
+		return empty_array;
+	}
     // If solution, return 4x4 matrix
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++){

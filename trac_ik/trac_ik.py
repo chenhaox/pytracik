@@ -4,9 +4,8 @@ Author: Hao Chen (chen960216@gmail.com)
 Created: 20220811osaka
 
 """
-# import os
-#
-# os.add_dll_directory(os.path.split(__file__)[0])
+import os
+os.add_dll_directory(os.path.split(__file__)[0])
 
 from pathlib import Path
 from typing import Literal

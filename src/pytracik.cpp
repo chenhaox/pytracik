@@ -78,11 +78,49 @@ py::array_t<double> JntToCart(TRAC_IK::TRAC_IK& t, py::array_t<double> cfg) {
     return result_array;
 }
 
-int getNrOfJointsInChain(TRAC_IK::TRAC_IK& t, std::string base, std::string tip) {
+int getNrOfJointsInChain(TRAC_IK::TRAC_IK& t) {
 	KDL::Chain chain;
 	t.getKDLChain(chain);
 	return (int)chain.getNrOfJoints();
 }
+
+std::vector<double> getLowerBoundLimits(TRAC_IK::TRAC_IK& t){
+  KDL::JntArray lb_;
+  KDL::JntArray ub_;
+  std::vector<double> lb;
+  t.getKDLLimits(lb_, ub_);
+  for(unsigned int i=0; i < lb_.rows(); i++){
+    lb.push_back(lb_(i));
+  }
+  return lb;
+}
+
+std::vector<double> getUpperBoundLimits(TRAC_IK::TRAC_IK& t){
+  KDL::JntArray lb_;
+  KDL::JntArray ub_;
+  std::vector<double> ub;
+  t.getKDLLimits(lb_, ub_);
+  for(unsigned int i=0; i < ub_.rows(); i++){
+    ub.push_back(ub_(i));
+  }
+  return ub;
+}
+
+// Set KDL limits, Python takes care of checking number of limits
+void setKDLLimits(TRAC_IK::TRAC_IK& t, const std::vector<double> lb, const std::vector<double> ub) {
+  KDL::JntArray lb_;
+  KDL::JntArray ub_;
+  lb_.resize(lb.size());
+  for(unsigned int i=0; i < lb.size(); i++){
+    lb_(i) = lb[i];
+  }
+  ub_.resize(ub.size());
+  for(unsigned int i=0; i < ub.size(); i++){
+    ub_(i) = ub[i];
+  }
+  t.setKDLLimits(lb_, ub_);
+}
+
 
 
 PYBIND11_MODULE(pytracik, m) {
@@ -102,6 +140,8 @@ PYBIND11_MODULE(pytracik, m) {
 	m.def("to_frame", &toKdlFrame)*/
     m.def("ik", &CartToJnt)
     .def("get_num_joints", &getNrOfJointsInChain).
-    def("get_num_joints", &getNrOfJointsInChain).
+    def("get_joint_lower_bounds", &getLowerBoundLimits).
+    def("get_joint_upper_bounds", &getUpperBoundLimits).
+    def("set_joint_limits", &setKDLLimits).
     def("fk", &JntToCart);
 }

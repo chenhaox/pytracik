@@ -73,9 +73,9 @@ if __name__ == '__main__':
                           r".\dependency\nlopt\include",
                           r".\dependency\boost_1_79_0",
                           ],  # Include pybind11 headers
-            libraries=['nlopt', 'orocos-kdl', 'libboost_date_time-vc143-mt-s-x64-1_79', 'python39'],  # 添加依赖的库
+            libraries=['nlopt', 'orocos-kdl', 'libboost_date_time-vc143-mt-s-x64-1_79', 'python312'],  # 添加依赖的库
             library_dirs=[r'./dependency/boost_1_79_0/lib', r"./dependency/kdl/lib", r'./dependency/nlopt/lib',
-                          r'C:\Users\Chen Hao\AppData\Local\Programs\Python\Python39\libs'],  # 库文件的路径
+                          r'C:\Users\Chen Hao\AppData\Local\Programs\Python\Python312\libs'],  # 库文件的路径
             language='c++',
             extra_compile_args=['/std:c++17'],  # 或者其他你需要的编译选项
         ),

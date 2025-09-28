@@ -4,16 +4,15 @@ Author: Hao Chen (chen960216@gmail.com)
 Created: 20220811osaka
 
 """
-import os
-
-os.add_dll_directory(os.path.split(__file__)[0])
+# import os
+#
+# os.add_dll_directory(os.path.split(__file__)[0])
 
 from pathlib import Path
 from typing import Literal
 
 import numpy as np
 import pytracik
-
 
 
 def quaternion_from_matrix(matrix, isprecise=False):
@@ -110,11 +109,11 @@ class TracIK(object):
         self.base_link_name = base_link_name
         self.tip_link_name = tip_link_name
         self._ik_solver = pytracik.TRAC_IK(self.base_link_name,
-                                                    self.tip_link_name,
-                                                    self._urdf_string,
-                                                    self._timeout,
-                                                    self._epsilon,
-                                                    self._solve_type)
+                                           self.tip_link_name,
+                                           self._urdf_string,
+                                           self._timeout,
+                                           self._epsilon,
+                                           self._solve_type)
 
     @property
     def dof(self) -> int:
@@ -122,7 +121,44 @@ class TracIK(object):
         Get the number of joints in the chain.
         :return:  Number of joints in the chain.
         """
-        return pytracik.get_num_joints(self._ik_solver, self.base_link_name, self.tip_link_name)
+        return pytracik.get_num_joints(self._ik_solver)
+
+    @property
+    def joint_limits(self):
+        """
+        Return lower bound limits and upper bound limits for all the joints
+        in the order of the joint names.
+        """
+        lb = pytracik.get_joint_lower_bounds(self._ik_solver)
+        ub = pytracik.get_joint_upper_bounds(self._ik_solver)
+        return np.array(lb), np.array(ub)
+
+    @joint_limits.setter
+    def joint_limits(self, bounds):
+        """
+        Set joint limits for all the joints.
+
+        :arg list lower_bounds: List of float of the lower bound limits for
+            all joints.
+        :arg list upper_bounds: List of float of the upper bound limits for
+            all joints.
+        """
+        try:
+            lower_bounds, upper_bounds = bounds
+        except ValueError:
+            raise ValueError("bounds must be an iterable with two lists")
+        if len(lower_bounds) != self.dof:
+            raise ValueError(
+                "lower_bounds array size mismatch, input size "
+                f"{len(lower_bounds):d}, should be {self.dof:d}"
+            )
+
+        if len(upper_bounds) != self.dof:
+            raise ValueError(
+                "upper_bounds array size mismatch, input size "
+                f"{len(upper_bounds):d}, should be {self.dof:d}"
+            )
+        pytracik.set_joint_limits(self._ik_solver, lower_bounds, upper_bounds)
 
     def ik(self,
            tgt_pos: np.ndarray,
@@ -138,7 +174,7 @@ class TracIK(object):
 
         qw, qx, qy, qz = quaternion_from_matrix(tgt_rot)
         r = pytracik.ik(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
-        succ = r[0] >=0
+        succ = r[0] >= 0
         if succ:
             return r[1:]
         else:

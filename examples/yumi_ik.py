@@ -8,7 +8,7 @@ Created: 20220811osaka
 if __name__ == '__main__':
     import os
     import numpy as np
-    from pytracik.trac_ik import TracIK
+    from trac_ik import TracIK
 
     urdf_path = os.path.join(os.path.dirname(__file__), "urdf/yumi.urdf")
 

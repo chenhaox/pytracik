@@ -5,18 +5,18 @@
 Welcome to pytracik, a Python library that provides convenient and efficient bindings for the [Trac-IK](https://bitbucket.org/traclabs/trac_ik/src/master/) inverse kinematics solver. With support for Python 3.8+ and compatibility across both Windows and Linux environments.
 pytracik eliminates the need for ROS installation and simplifies the integration process. 
 
-**Differences from Original Repo**:
+**✨ Differences from Original Repo**:
 
-- **ROS-Free Integration**: Say goodbye to the ROS requirement. pytracik allows you to effortlessly incorporate Trac-IK's advanced inverse kinematics solver into your Python projects. However, it still depends on the
+- **🚀 ROS-Free Integration**: Say goodbye to the ROS requirement. pytracik allows you to effortlessly incorporate Trac-IK's advanced inverse kinematics solver into your Python projects. However, it still depends on the
    `boost`,`eigen`,`orocos-kdl` and `nlopt` libraries. 
-- **Cross-Platform Compatibility**: Whether you're on Windows or Linux, pytracik ensures consistent functionality across environments.
+- **💻 Cross-Platform Compatibility**: Whether you're on Windows or Linux, pytracik ensures consistent functionality across environments.
 
-## Links
+## 🔗 Links
 - Trac-IK Repository: https://bitbucket.org/traclabs/trac_ik/src/master/
 - Trac-IK Homepage: https://traclabs.com/projects/trac-ik/
 - Other ROS-free Trac-IK Python Bindings: https://github.com/mjd3/tracikpy
 
-# Quick Start
+# ⚡ Quick Start
 ```python
 import os
 import numpy as np
@@ -45,37 +45,55 @@ Output:
   0.18141696]
 ```
 
-# Installation
+# 📦 Installation
+1. Download this library and enter the project directory
+```bash
+git clone https://github.com/chenhaox/pytracik.git
+cd pytracik
+```
+2. Install required Python packages
+```bash
+pip install -r requirements.txt
+```
 
-## Installation on Linux
+## 🐧 Installation on Linux
 Here we use Ubuntu 22.04 as an example.
 
 1. Install dependencies: 1. _Boost_ 2. _Eigen3_ 3. _Orocos_ KDL 4. _NLopt_
     ```Bash
-    sudo apt install libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev 
+    sudo apt install libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev
     ```
-TODO: Finishthe installation instructions
+2. Install the package on Linux
+    ```bash 
+    python setup_linux.py install
+    ```
 
-## Install on Windows
+## 🪟 Install on Windows
+Download dependencies from Official Websites
+  - Download _Boost_ 1.79.0 (https://www.boost.org/) 
+  - _Eigen3_ 3.4.0 (https://eigen.tuxfamily.org/index.php?title=Main_Page)
+  - _NLopt_ (https://nlopt.readthedocs.io/en/latest/)
+  - _Orocos KDL_ (https://orocos.github.io/orocos_kinematics_dynamics/installation.html)
+
+**👉 Shortcut:** Instead of downloading them individually, you can grab a pre-packaged zip with all dependencies from the project’s GitHub release:
+
+📥 https://github.com/chenhaox/pytracik/releases/tag/dependency_files
+
+### 🔹 Method 1: Install with Setup.py (Recommended for most users)
+
+Copy the downloaded dependency zip file and unzip it to project root directory.
+Then run the following command in the project root directory:
+   ```bash
+   python setup_windows.py install
+   ```
+
+### 🔹 Method 2: Manual Build with Visual Studio (For advanced users)
 1. Download Visual Studio (https://visualstudio.microsoft.com/downloads/). Here we use Visual Studio 2022 as an example.
    Install required components:
    - Desktop development with C++
-   - C++ CMake tools for Windows 
-2. Install required Python packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Download Dependencies:
-   - Option 1: Quick Download from Google Drive ( **Recommended** )
-     - For your convenience, you can download a pre-packaged zip file containing the required dependencies directly from our Google Drive: https://drive.google.com/file/d/1Smv3pJS6yL0Ss_gbsm0m6zD3mG-lQ47x/view?usp=sharing)
-   
-   - Option 2: Manual Download from Official Websites
-     - Download _Boost_ 1.79.0 (https://www.boost.org/) 
-     - _Eigen3_ 3.4.0 (https://eigen.tuxfamily.org/index.php?title=Main_Page)
-     - _NLopt_ (https://nlopt.readthedocs.io/en/latest/)
-     - _Orocos KDL_ (https://orocos.github.io/orocos_kinematics_dynamics/installation.html)
-   
-4. Compile pytracik with Visual Studio following the instructions below.
+   - C++ CMake tools for Windows  
+
+2. Compile pytracik with Visual Studio following the instructions below.
    a. Create an C++ `Empty project` in Visual Studio.
 
       ![img.png](img/img.png)
@@ -109,9 +127,9 @@ TODO: Finishthe installation instructions
    
     h. Set the `Solution Configuration` to `Release` and `Solution Platform` to `x64`. Then build the project. The `pytracik_bindings.pyd` file will be generated in the `Release` folder.
       ![img_7.png](img/img_7.png)
-5. Copy the `pytracik_bindings.pyd` file to the [pytracik](pytracik) folder.
+3. Copy the `pytracik_bindings.pyd` file to the [pytracik](pytracik) folder.
    **Note**: if the error `ImportError: DLL load failed while importing pytracik: The specified module could not be found.` occurs, please copy the `nlopt.dll` in the `<NLopt installation path\bin>` to the [pytracik](pytracik) folder:
-6. Make installation (**Optional**):
+4. Make installation (**Optional**):
    ```bash
    pip install -e .
    ```

@@ -67,6 +67,16 @@ Here we use Ubuntu 22.04 as an example.
     ```bash 
     python setup_linux.py install
     ```
+## 🪟 Install on MacOS
+1. Install dependencies: 1.Boost 2. Eigen3 3. Orocos-KDL 4.Nlopt
+    ```Bash
+    brew install boost eigen3 orocos-kdl nlopt
+    ```
+2. Install the package on MacOS
+   ```Bash
+   python setup_mac.py install
+   ```
+
 
 ## 🪟 Install on Windows
 Download dependencies from Official Websites

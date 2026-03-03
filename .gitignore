@@ -1,0 +1,16 @@
+/.venv/
+/dist/
+/build/
+/pytracik.egg-info/
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.dll
+*.log
+*.tmp
+.DS_Store
+*.swp
+*.swo
+/.idea/
+/.vscode/

@@ -1,3 +1,21 @@
 [build-system]
 requires = ["setuptools>=42", "pybind11>=2.10.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytracik"
+description = "TracIK Python Bindings"
+requires-python = ">=3.9"
+license = { text = "MIT Software License" }
+authors = [
+    { name = "Hao Chen", email = "chen960216@gmail.com" },
+]
+keywords = ["robotics", "inverse kinematics", "trac_ik"]
+dynamic = ["version"]
+dependencies = [
+    "numpy",
+    "pybind11>=2.10.0",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "trac_ik.version.__version__" }

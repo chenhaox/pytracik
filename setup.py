@@ -10,11 +10,6 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 from setuptools import setup
 
 
-def requirements_from_file(file_name):
-    with open(file_name) as f:
-        return f.read().splitlines()
-
-
 def find_files(path, file_extension, visited=None, found_files=None):
     if found_files is None:
         found_files = []
@@ -159,19 +154,9 @@ else:
     raise RuntimeError(f"Unsupported platform: {_system}")
 
 setup(
-    name="pytracik",
-    version=version,
-    description="TracIK Python Bindings",
-    author="Hao Chen",
-    author_email="chen960216@gmail.com",
-    license="MIT Software License",
-    url="https://github.com/chenhaox/pytracik",
-    keywords="robotics inverse kinematics",
     packages=_packages,
     include_package_data=True,
     package_data=_package_data,
     cmdclass={"build_ext": build_ext},
     ext_modules=ext_modules,
-    install_requires=requirements_from_file(os.path.join(_here, 'requirements.txt')),
-    python_requires='>=3.9',
 )

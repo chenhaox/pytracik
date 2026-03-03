@@ -65,10 +65,6 @@ uv add "pytracik @ git+https://github.com/dantetemplar/fork-pytracik.git"
 git clone https://github.com/chenhaox/pytracik.git
 cd pytracik
 ```
-2. Install required Python packages
-```bash
-pip install -r requirements.txt
-```
 
 ## 🐧 Installation on Linux
 Here we use Ubuntu 22.04 as an example.
@@ -79,7 +75,7 @@ Here we use Ubuntu 22.04 as an example.
     ```
 2. Install the package on Linux
     ```bash 
-    python setup.py install
+    pip install .
     ```
 ## 🪟 Install on MacOS
 1. Install dependencies: 1.Boost 2. Eigen3 3. Orocos-KDL 4.Nlopt
@@ -88,7 +84,7 @@ Here we use Ubuntu 22.04 as an example.
     ```
 2. Install the package on MacOS
    ```Bash
-   python setup.py install
+   pip install .
    ```
 
 
@@ -103,12 +99,12 @@ Download dependencies from Official Websites
 
 📥 https://github.com/chenhaox/pytracik/releases/tag/dependency_files
 
-### 🔹 Method 1: Install with Setup.py (Recommended for most users)
+### 🔹 Method 1: Install with pip (Recommended for most users)
 
 Copy the downloaded dependency zip file and unzip it to project root directory.
 Then run the following command in the project root directory:
    ```bash
-   python setup.py install
+   pip install .
    ```
 
 ### 🔹 Method 2: Manual Build with Visual Studio (For advanced users)

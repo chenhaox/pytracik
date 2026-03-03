@@ -49,7 +49,10 @@ with open(version_file, "r") as _f:
 
 module_name = "pytracik"
 src_dir = os.path.join(_here, "src")
-src_files = find_files(src_dir, '.cpp')
+src_files = [
+    os.path.relpath(f, _here).replace(os.sep, '/')
+    for f in find_files(src_dir, '.cpp')
+]
 
 _system = platform.system()
 
@@ -84,18 +87,13 @@ if _system == "Linux":
     _package_data = {}
 
 elif _system == "Darwin":
-    src_files_rel = [
-        os.path.relpath(f, _here).replace(os.sep, '/')
-        if os.path.isabs(f) else f
-        for f in src_files
-    ]
     python_library = sysconfig.get_config_var('LIBPL')
     python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
     ext_modules = [
         Pybind11Extension(
             module_name,
-            src_files_rel,
+            src_files,
             include_dirs=[
                 pybind11.get_include(),
                 "/opt/homebrew/include",

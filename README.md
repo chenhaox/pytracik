@@ -81,10 +81,6 @@ Here we use Ubuntu 22.04 as an example.
     ```bash 
     python setup.py install
     ```
-    Or use the Linux-specific setup file:
-    ```bash
-    python setup_linux.py install
-    ```
 ## 🪟 Install on MacOS
 1. Install dependencies: 1.Boost 2. Eigen3 3. Orocos-KDL 4.Nlopt
     ```Bash
@@ -93,10 +89,6 @@ Here we use Ubuntu 22.04 as an example.
 2. Install the package on MacOS
    ```Bash
    python setup.py install
-   ```
-   Or use the macOS-specific setup file:
-   ```Bash
-   python setup_mac.py install
    ```
 
 
@@ -117,10 +109,6 @@ Copy the downloaded dependency zip file and unzip it to project root directory.
 Then run the following command in the project root directory:
    ```bash
    python setup.py install
-   ```
-   Or use the Windows-specific setup file:
-   ```bash
-   python setup_windows.py install
    ```
 
 ### 🔹 Method 2: Manual Build with Visual Studio (For advanced users)

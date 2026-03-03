@@ -46,6 +46,20 @@ Output:
 ```
 
 # 📦 Installation
+
+## ⚡ Direct Installation (pip / uv)
+
+Install directly from GitHub without cloning the repository first.  Make sure the system dependencies are installed for your platform (see the platform sections below), then run:
+
+```bash
+# pip
+pip install "pytracik @ git+https://github.com/dantetemplar/fork-pytracik.git"
+
+# uv
+uv add "pytracik @ git+https://github.com/dantetemplar/fork-pytracik.git"
+```
+
+## 🛠️ Manual Installation (from source)
 1. Download this library and enter the project directory
 ```bash
 git clone https://github.com/chenhaox/pytracik.git
@@ -65,6 +79,10 @@ Here we use Ubuntu 22.04 as an example.
     ```
 2. Install the package on Linux
     ```bash 
+    python setup.py install
+    ```
+    Or use the Linux-specific setup file:
+    ```bash
     python setup_linux.py install
     ```
 ## 🪟 Install on MacOS
@@ -73,6 +91,10 @@ Here we use Ubuntu 22.04 as an example.
     brew install boost eigen3 orocos-kdl nlopt
     ```
 2. Install the package on MacOS
+   ```Bash
+   python setup.py install
+   ```
+   Or use the macOS-specific setup file:
    ```Bash
    python setup_mac.py install
    ```
@@ -93,6 +115,10 @@ Download dependencies from Official Websites
 
 Copy the downloaded dependency zip file and unzip it to project root directory.
 Then run the following command in the project root directory:
+   ```bash
+   python setup.py install
+   ```
+   Or use the Windows-specific setup file:
    ```bash
    python setup_windows.py install
    ```

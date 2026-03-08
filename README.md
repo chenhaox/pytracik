@@ -5,14 +5,14 @@
 
 > **📢 Now available on PyPI!** Install with `pip install pytracik`. See [Installation](#-installation) for details.
 
-Welcome to pytracik, a Python library that provides convenient and efficient bindings for the [Trac-IK](https://bitbucket.org/traclabs/trac_ik/src/master/) inverse kinematics solver. With support for Python 3.8+ and compatibility across both Windows and Linux environments.
+Welcome to pytracik, a Python library that provides convenient and efficient bindings for the [Trac-IK](https://bitbucket.org/traclabs/trac_ik/src/master/) inverse kinematics solver. With support for Python 3.8+ and compatibility across Windows, Linux and Mac environments.
 pytracik eliminates the need for ROS installation and simplifies the integration process. 
 
 **✨ Differences from Original Repo**:
 
 - **🚀 ROS-Free Integration**: Say goodbye to the ROS requirement. pytracik allows you to effortlessly incorporate Trac-IK's advanced inverse kinematics solver into your Python projects. However, it still depends on the
    `boost`,`eigen`,`orocos-kdl` and `nlopt` libraries. 
-- **💻 Cross-Platform Compatibility**: Whether you're on Windows or Linux, pytracik ensures consistent functionality across environments.
+- **💻 Cross-Platform Compatibility**: Whether you're on Windows, Linux or Mac, pytracik ensures consistent functionality across environments.
 
 ## 🔗 Links
 - Trac-IK Repository: https://bitbucket.org/traclabs/trac_ik/src/master/

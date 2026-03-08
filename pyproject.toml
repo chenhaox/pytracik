@@ -48,7 +48,7 @@ manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
 before-all = """\
   dnf install -y epel-release && \
-  dnf config-manager --set-enabled crb && \
+  (dnf config-manager --set-enabled crb 2>/dev/null || dnf config-manager --set-enabled powertools) && \
   dnf install -y boost-devel eigen3-devel orocos-kdl-devel cmake gcc-c++ && \
   cd /tmp && \
   curl -L https://github.com/stevengj/nlopt/archive/refs/tags/v2.7.1.tar.gz | tar xz && \

@@ -40,7 +40,7 @@ _here = os.path.dirname(os.path.abspath(__file__))
 
 version_file = os.path.join(_here, "trac_ik", "version.py")
 with open(version_file, "r") as _f:
-    version = ast.literal_eval(_f.read().strip().split("=")[-1])
+    version = ast.literal_eval(_f.read().strip().split("=")[-1].strip())
 
 module_name = "pytracik"
 src_dir = os.path.join(_here, "src")

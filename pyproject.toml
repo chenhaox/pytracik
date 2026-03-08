@@ -41,7 +41,7 @@ version = { attr = "trac_ik.version.__version__" }
 
 [tool.cibuildwheel]
 build = "cp39-* cp310-* cp311-* cp312-* cp313-*"
-skip = "*-musllinux_* *-win32 *-manylinux_i686"
+skip = "*-musllinux_* *-win32 *-win_amd64 *-manylinux_i686"
 
 [tool.cibuildwheel.linux]
 before-all = "yum install -y epel-release && yum install -y boost-devel eigen3-devel nlopt-devel orocos-kdl-devel || (apt-get update && apt-get install -y libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev)"

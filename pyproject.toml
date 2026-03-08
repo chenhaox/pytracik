@@ -5,13 +5,29 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pytracik"
 description = "TracIK Python Bindings"
+readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT Software License" }
+license = "MIT"
 authors = [
     { name = "Hao Chen", email = "chen960216@gmail.com" },
 ]
 keywords = ["robotics", "inverse kinematics", "trac_ik"]
 dynamic = ["version"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: C++",
+    "Topic :: Scientific/Engineering",
+]
 dependencies = [
     "numpy",
 ]
@@ -22,3 +38,13 @@ Repository = "https://github.com/chenhaox/pytracik"
 
 [tool.setuptools.dynamic]
 version = { attr = "trac_ik.version.__version__" }
+
+[tool.cibuildwheel]
+build = "cp39-* cp310-* cp311-* cp312-* cp313-*"
+skip = "*-musllinux_* *-win32 *-manylinux_i686"
+
+[tool.cibuildwheel.linux]
+before-all = "yum install -y epel-release && yum install -y boost-devel eigen3-devel nlopt-devel orocos-kdl-devel || (apt-get update && apt-get install -y libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev)"
+
+[tool.cibuildwheel.macos]
+before-all = "brew install boost eigen nlopt orocos-kdl"

@@ -44,16 +44,14 @@ build = "cp39-* cp310-* cp311-* cp312-* cp313-*"
 skip = "*-musllinux_* *-win32 *-manylinux_i686 cp39-macosx_arm64"
 
 [tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux_2_28"
-manylinux-aarch64-image = "manylinux_2_28"
-before-all = "dnf install -y epel-release && dnf install -y boost-devel eigen3-devel NLopt-devel orocos-kdl-devel"
+manylinux-x86_64-image = "manylinux_2_34"
+manylinux-aarch64-image = "manylinux_2_34"
+before-all = "dnf install -y epel-release && dnf config-manager --set-enabled crb && dnf install -y boost-devel eigen3-devel NLopt-devel orocos-kdl-devel"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install boost eigen nlopt orocos-kdl"
-repair-wheel-command = "DYLD_LIBRARY_PATH=/opt/homebrew/lib:$(brew --prefix orocos-kdl)/lib delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
-
-[tool.cibuildwheel.macos.environment]
-MACOSX_DEPLOYMENT_TARGET = "11.0"
+environment = { MACOSX_DEPLOYMENT_TARGET = "15.0", REPAIR_LIBRARY_PATH = "$(brew --prefix)/lib:$(brew --prefix orocos-kdl)/lib" }
+repair-wheel-command = "DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
 
 [tool.cibuildwheel.windows]
 before-all = "powershell -Command \"Invoke-WebRequest -Uri 'https://github.com/chenhaox/pytracik/releases/download/dependency_files/dependency.zip' -OutFile dependency.zip; Expand-Archive -Path dependency.zip -DestinationPath . -Force; Remove-Item dependency.zip; Copy-Item -Path dependency\\nlopt\\bin\\nlopt.dll -Destination trac_ik\\nlopt.dll -Force\""

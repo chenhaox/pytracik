@@ -2,6 +2,7 @@ import ast
 import fnmatch
 import os
 import platform
+import subprocess
 import sys
 import sysconfig
 
@@ -85,20 +86,23 @@ elif _system == "Darwin":
     python_library = sysconfig.get_config_var('LIBPL')
     python_lib = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
+    homebrew_prefix = subprocess.check_output(["brew", "--prefix"]).decode().strip()
+    kdl_prefix = subprocess.check_output(["brew", "--prefix", "orocos-kdl"]).decode().strip()
+
     ext_modules = [
         Pybind11Extension(
             module_name,
             src_files,
             include_dirs=[
                 pybind11.get_include(),
-                "/opt/homebrew/include",
-                "/opt/homebrew/Cellar/orocos-kdl/1.5.3_1/include",
-                "/opt/homebrew/include/eigen3",
+                f"{homebrew_prefix}/include",
+                f"{kdl_prefix}/include",
+                f"{homebrew_prefix}/include/eigen3",
             ],
             libraries=['nlopt', 'orocos-kdl', 'boost_date_time', 'boost_thread', python_lib],
             library_dirs=[
-                "/opt/homebrew/lib",
-                "/opt/homebrew/Cellar/orocos-kdl/1.5.3_1/lib/",
+                f"{homebrew_prefix}/lib",
+                f"{kdl_prefix}/lib",
                 python_library,
             ],
             language="c++",

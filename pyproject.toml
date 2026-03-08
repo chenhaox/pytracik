@@ -46,7 +46,7 @@ skip = "*-musllinux_* *-win32 *-manylinux_i686 cp39-macosx_arm64"
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux_2_34"
 manylinux-aarch64-image = "manylinux_2_34"
-before-all = "dnf install -y epel-release && dnf config-manager --set-enabled crb && dnf install -y boost-devel eigen3-devel NLopt-devel orocos-kdl-devel"
+before-all = "dnf install -y epel-release && dnf config-manager --set-enabled crb && dnf install -y boost-devel eigen3-devel orocos-kdl-devel cmake gcc-c++ && cd /tmp && curl -L https://github.com/stevengj/nlopt/archive/refs/tags/v2.7.1.tar.gz | tar xz && cd nlopt-2.7.1 && cmake -DCMAKE_INSTALL_PREFIX=/usr -DNLOPT_PYTHON=OFF -DNLOPT_OCTAVE=OFF -DNLOPT_MATLAB=OFF -DNLOPT_GUILE=OFF -DNLOPT_SWIG=OFF . && make -j$(nproc) && make install"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install boost eigen nlopt orocos-kdl"

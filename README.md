@@ -1,6 +1,9 @@
 # pytracik - Trac-IK bindings in Python
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI version](https://img.shields.io/pypi/v/pytracik.svg)](https://pypi.org/project/pytracik/)
+
+> **📢 Now available on PyPI!** Install with `pip install pytracik` — no need to build from source on Linux and macOS. See [Installation](#-installation) for details.
 
 Welcome to pytracik, a Python library that provides convenient and efficient bindings for the [Trac-IK](https://bitbucket.org/traclabs/trac_ik/src/master/) inverse kinematics solver. With support for Python 3.8+ and compatibility across both Windows and Linux environments.
 pytracik eliminates the need for ROS installation and simplifies the integration process. 

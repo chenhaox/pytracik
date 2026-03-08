@@ -50,32 +50,21 @@ Output:
 
 # 📦 Installation
 
-## 🔧 System Prerequisites
-
-You **must** install the following system libraries before installing the Python package:
+## ⚡ Install from PyPI (recommended)
 
 ### 🐧 Linux (Ubuntu / Debian)
-
 ```bash
-sudo apt-get update
 sudo apt-get install -y libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev
+pip install pytracik
 ```
 
-### 🍎 macOS (Homebrew)
-
+### 🍎 macOS
 ```bash
 brew install boost eigen orocos-kdl nlopt
+pip install pytracik
 ```
 
 ### 🪟 Windows
-
-On Windows, system prerequisites are not needed except for manual installation (for advanced user).
-
-
-## ⚡ Install from PyPI (recommended)
-
-Once the system prerequisites above are installed:
-
 ```bash
 pip install pytracik
 ```

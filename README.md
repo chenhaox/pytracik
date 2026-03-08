@@ -80,18 +80,6 @@ Once the system prerequisites above are installed:
 pip install pytracik
 ```
 
-## ⚡ Direct Installation (pip / uv)
-
-Install directly from GitHub without cloning the repository first.  Make sure the system dependencies are installed for your platform (see the platform sections below), then run:
-
-```bash
-# pip
-pip install "pytracik @ git+https://github.com/chenhaox/pytracik.git"
-
-# uv
-uv add "pytracik @ git+https://github.com/chenhaox/pytracik.git"
-```
-
 ## 🛠️ Manual Installation (from source)
 1. Download this library and enter the project directory
 ```bash

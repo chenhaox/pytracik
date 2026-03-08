@@ -47,9 +47,52 @@ Output:
 
 # 📦 Installation
 
-## ⚡ Direct Installation (pip / uv)
+## 🔧 System Prerequisites
 
-Install directly from GitHub without cloning the repository first.  Make sure the system dependencies are installed for your platform (see the platform sections below), then run:
+pytracik is a C++ extension that compiles from source.  You **must** install the following system libraries before installing the Python package:
+
+| Library | Purpose |
+|---------|---------|
+| **Boost** (date_time, system, thread) | General C++ utilities |
+| **Eigen3** | Linear algebra |
+| **Orocos KDL** | Kinematics & dynamics |
+| **NLopt** | Numerical optimisation |
+
+### 🐧 Linux (Ubuntu / Debian)
+
+```bash
+sudo apt-get update
+sudo apt-get install -y libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev
+```
+
+### 🍎 macOS (Homebrew)
+
+```bash
+brew install boost eigen orocos-kdl nlopt
+```
+
+### 🪟 Windows
+
+Download the dependencies from official sources or use the pre-packaged zip from the project releases:
+
+- _Boost_ 1.79.0 — <https://www.boost.org/>
+- _Eigen3_ 3.4.0 — <https://eigen.tuxfamily.org/>
+- _NLopt_ — <https://nlopt.readthedocs.io/>
+- _Orocos KDL_ — <https://orocos.github.io/orocos_kinematics_dynamics/installation.html>
+
+**👉 Shortcut:** Grab the pre-packaged zip: 📥 <https://github.com/chenhaox/pytracik/releases/tag/dependency_files>
+
+Unzip it into the project root so that a `dependency/` folder exists next to `setup.py`.
+
+## ⚡ Install from PyPI (recommended)
+
+Once the system prerequisites above are installed:
+
+```bash
+pip install pytracik
+```
+
+## ⚡ Install from GitHub
 
 ```bash
 # pip
@@ -59,55 +102,17 @@ pip install "pytracik @ git+https://github.com/chenhaox/pytracik.git"
 uv add "pytracik @ git+https://github.com/chenhaox/pytracik.git"
 ```
 
-## 🛠️ Manual Installation (from source)
-1. Download this library and enter the project directory
+## 🛠️ Install from source
+
 ```bash
 git clone https://github.com/chenhaox/pytracik.git
 cd pytracik
+pip install .
 ```
 
-## 🐧 Installation on Linux
-Here we use Ubuntu 22.04 as an example.
 
-1. Install dependencies: 1. _Boost_ 2. _Eigen3_ 3. _Orocos_ KDL 4. _NLopt_
-    ```Bash
-    sudo apt install libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev
-    ```
-2. Install the package on Linux
-    ```bash 
-    pip install .
-    ```
-## 🪟 Install on MacOS
-1. Install dependencies: 1.Boost 2. Eigen3 3. Orocos-KDL 4.Nlopt
-    ```Bash
-    brew install boost eigen3 orocos-kdl nlopt
-    ```
-2. Install the package on MacOS
-   ```Bash
-   pip install .
-   ```
+## 🪟 Windows: Manual Build with Visual Studio (advanced)
 
-
-## 🪟 Install on Windows
-Download dependencies from Official Websites
-  - Download _Boost_ 1.79.0 (https://www.boost.org/) 
-  - _Eigen3_ 3.4.0 (https://eigen.tuxfamily.org/index.php?title=Main_Page)
-  - _NLopt_ (https://nlopt.readthedocs.io/en/latest/)
-  - _Orocos KDL_ (https://orocos.github.io/orocos_kinematics_dynamics/installation.html)
-
-**👉 Shortcut:** Instead of downloading them individually, you can grab a pre-packaged zip with all dependencies from the project’s GitHub release:
-
-📥 https://github.com/chenhaox/pytracik/releases/tag/dependency_files
-
-### 🔹 Method 1: Install with pip (Recommended for most users)
-
-Copy the downloaded dependency zip file and unzip it to project root directory.
-Then run the following command in the project root directory:
-   ```bash
-   pip install .
-   ```
-
-### 🔹 Method 2: Manual Build with Visual Studio (For advanced users)
 1. Download Visual Studio (https://visualstudio.microsoft.com/downloads/). Here we use Visual Studio 2022 as an example.
    Install required components:
    - Desktop development with C++

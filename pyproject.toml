@@ -54,6 +54,7 @@ before-all = """\
   curl -L https://github.com/stevengj/nlopt/archive/refs/tags/v2.7.1.tar.gz | tar xz && \
   cd nlopt-2.7.1 && \
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DNLOPT_PYTHON=OFF -DNLOPT_OCTAVE=OFF \
     -DNLOPT_MATLAB=OFF -DNLOPT_GUILE=OFF \
     -DNLOPT_SWIG=OFF . && \

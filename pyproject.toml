@@ -14,8 +14,11 @@ keywords = ["robotics", "inverse kinematics", "trac_ik"]
 dynamic = ["version"]
 dependencies = [
     "numpy",
-    "pybind11>=2.10.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/chenhaox/pytracik"
+Repository = "https://github.com/chenhaox/pytracik"
 
 [tool.setuptools.dynamic]
 version = { attr = "trac_ik.version.__version__" }

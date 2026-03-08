@@ -83,7 +83,7 @@ if _system == "Linux":
 
 elif _system == "Darwin":
     python_library = sysconfig.get_config_var('LIBPL')
-    python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+    python_lib = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
     ext_modules = [
         Pybind11Extension(
@@ -95,7 +95,7 @@ elif _system == "Darwin":
                 "/opt/homebrew/Cellar/orocos-kdl/1.5.3_1/include",
                 "/opt/homebrew/include/eigen3",
             ],
-            libraries=['nlopt', 'orocos-kdl', 'boost_date_time', 'boost_thread', python_version],
+            libraries=['nlopt', 'orocos-kdl', 'boost_date_time', 'boost_thread', python_lib],
             library_dirs=[
                 "/opt/homebrew/lib",
                 "/opt/homebrew/Cellar/orocos-kdl/1.5.3_1/lib/",

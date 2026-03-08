@@ -53,10 +53,10 @@ Install directly from GitHub without cloning the repository first.  Make sure th
 
 ```bash
 # pip
-pip install "pytracik @ git+https://github.com/dantetemplar/fork-pytracik.git"
+pip install "pytracik @ git+https://github.com/chenhaox/pytracik.git"
 
 # uv
-uv add "pytracik @ git+https://github.com/dantetemplar/fork-pytracik.git"
+uv add "pytracik @ git+https://github.com/chenhaox/pytracik.git"
 ```
 
 ## 🛠️ Manual Installation (from source)

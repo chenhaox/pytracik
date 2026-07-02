@@ -12,7 +12,7 @@ if platform.system() == "Windows":
     os.add_dll_directory(os.path.split(__file__)[0])
 
 from pathlib import Path
-from typing import Literal
+from typing import Literal, List
 
 import numpy as np
 import pytracik
@@ -127,7 +127,7 @@ class TracIK(object):
         return pytracik.get_num_joints(self._ik_solver)
 
     @property
-    def joint_names(self):
+    def joint_names(self) -> List[str]:
         """
         Get the joint names in the order of the joint values.
         :return: List of joint names.

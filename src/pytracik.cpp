@@ -18,7 +18,13 @@ py::array_t<double> CartToJnt(TRAC_IK::TRAC_IK& t,
 	double qx,
 	double qy,
 	double qz,
-	double qw) {
+	double qw,
+    double bx=0.0,
+    double by=0.0,
+    double bz=0.0,
+    double brx=0.0,
+    double bry=0.0,
+    double brz=0.0) {
 
 	// input
 	py::buffer_info init_q_buf = init_q.request();
@@ -34,11 +40,14 @@ py::array_t<double> CartToJnt(TRAC_IK::TRAC_IK& t,
 
 	for (int i = 0; i < init_q_buf.size; i++)
 		q(i) = init_q_buf_ptr[i];
+    
+    KDL::Twist bounds(KDL::Vector(bx, by, bz), KDL::Vector(brx, bry, brz));    
 
 	int r = t.CartToJnt(
 		q,
 		KDL::Frame(KDL::Rotation::Quaternion(qx, qy, qz, qw), KDL::Vector(x, y, z)),
-		result);
+		result,
+        bounds);
 
 	result_array_buf_ptr[0] = (float)r;
 	if (r>=0) {
@@ -82,6 +91,13 @@ int getNrOfJointsInChain(TRAC_IK::TRAC_IK& t) {
 	KDL::Chain chain;
 	t.getKDLChain(chain);
 	return (int)chain.getNrOfJoints();
+}
+
+
+std::vector<std::string> getJointNames(TRAC_IK::TRAC_IK& t) {
+    std::vector<std::string> names;
+    t.getKDLJointNames(names);
+    return names;
 }
 
 std::vector<double> getLowerBoundLimits(TRAC_IK::TRAC_IK& t){
@@ -138,10 +154,16 @@ PYBIND11_MODULE(pytracik, m) {
 		.def(py::init<unsigned int>())
 		.def("cart_to_jnt", &TRAC_IK::TRAC_IK::CartToJnt);
 	m.def("to_frame", &toKdlFrame)*/
-    m.def("ik", &CartToJnt)
-    .def("get_num_joints", &getNrOfJointsInChain).
-    def("get_joint_lower_bounds", &getLowerBoundLimits).
-    def("get_joint_upper_bounds", &getUpperBoundLimits).
-    def("set_joint_limits", &setKDLLimits).
-    def("fk", &JntToCart);
+    m.def("ik", &CartToJnt, "TRAC-IK Kinematics Solver",
+          py::arg("t"), py::arg("init_q"),
+          py::arg("x"), py::arg("y"), py::arg("z"),
+          py::arg("qx"), py::arg("qy"), py::arg("qz"), py::arg("qw"),
+          py::arg("bx") = 0.0, py::arg("by") = 0.0, py::arg("bz") = 0.0,
+          py::arg("brx") = 0.0, py::arg("bry") = 0.0, py::arg("brz") = 0.0)
+    .def("get_num_joints", &getNrOfJointsInChain)
+    .def("get_joint_lower_bounds", &getLowerBoundLimits)
+    .def("get_joint_upper_bounds", &getUpperBoundLimits)
+    .def("get_joint_names", &getJointNames)
+    .def("set_joint_limits", &setKDLLimits)
+    .def("fk", &JntToCart);
 }

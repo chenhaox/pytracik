@@ -24,7 +24,7 @@ if __name__ == '__main__':
     tgt_rotmat = np.array([[0.5, 0., 0.8660254],
                            [0., 1., 0.],
                            [-0.8660254, 0., 0.5]])
-    result = yumi_rgt_arm_iksolver.ik(tgt_pos, tgt_rotmat, seed_jnt_values=seed_jnt)
+    result = yumi_rgt_arm_iksolver.ik(tgt_pos, tgt_rotmat, seed_jnt_values=seed_jnt, pos_bounds=np.array([0.01, 0.01, 0.01]), rot_bounds=np.array([0.01, 0.01, 0.01]))
     print("The ik solution is", result)
 
     pos_fk, rot_fk = yumi_rgt_arm_iksolver.fk(result)

@@ -12,7 +12,7 @@ if platform.system() == "Windows":
     os.add_dll_directory(os.path.split(__file__)[0])
 
 from pathlib import Path
-from typing import Literal
+from typing import Literal, List
 
 import numpy as np
 import pytracik
@@ -127,6 +127,14 @@ class TracIK(object):
         return pytracik.get_num_joints(self._ik_solver)
 
     @property
+    def joint_names(self) -> List[str]:
+        """
+        Get the joint names in the order of the joint values.
+        :return: List of joint names.
+        """
+        return pytracik.get_joint_names(self._ik_solver)
+
+    @property
     def joint_limits(self):
         """
         Return lower bound limits and upper bound limits for all the joints
@@ -164,19 +172,37 @@ class TracIK(object):
         pytracik.set_joint_limits(self._ik_solver, lower_bounds, upper_bounds)
 
     def ik(self,
-           tgt_pos: np.ndarray,
-           tgt_rot: np.ndarray,
-           seed_jnt_values: np.ndarray) -> None or np.ndarray:
+       tgt_pos: np.ndarray,
+       tgt_rot: np.ndarray,
+       seed_jnt_values: np.ndarray,
+       pos_bounds: np.ndarray = None,
+       rot_bounds: np.ndarray = None) -> None or np.ndarray:
         """
         Solve the IK.
         :param tgt_pos: 1x3 target position
         :param tgt_rot: 3x3 target rotation matrix
         :param seed_jnt_values: 1xN seed joint values
+        :param pos_bounds: 1x3 position tolerances [bx, by, bz]. Default is strictly 0.0.
+        :param rot_bounds: 1x3 rotation tolerances [brx, bry, brz]. Default is strictly 0.0.
         :return: None if no solution is found, otherwise 1xN joint values
         """
 
+        if pos_bounds is None:
+            pos_bounds = np.zeros(3)
+        if rot_bounds is None:
+            rot_bounds = np.zeros(3)
+
         qw, qx, qy, qz = quaternion_from_matrix(tgt_rot)
-        r = pytracik.ik(self._ik_solver, seed_jnt_values, tgt_pos[0], tgt_pos[1], tgt_pos[2], qx, qy, qz, qw)
+        
+        r = pytracik.ik(
+            self._ik_solver, 
+            seed_jnt_values, 
+            tgt_pos[0], tgt_pos[1], tgt_pos[2], 
+            qx, qy, qz, qw,
+            pos_bounds[0], pos_bounds[1], pos_bounds[2],
+            rot_bounds[0], rot_bounds[1], rot_bounds[2]
+        )
+        
         succ = r[0] >= 0
         if succ:
             return r[1:]

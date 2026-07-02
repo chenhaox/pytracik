@@ -129,7 +129,11 @@ namespace TRAC_IK {
         iksolver.reset(new KDL::ChainIkSolverPos_TL(chain, lb, ub, maxtime, eps, true, true));
 
         for (unsigned int i = 0; i < chain.segments.size(); i++) {
-            std::string type = chain.segments[i].getJoint().getTypeName();
+            KDL::Joint joint = chain.segments[i].getJoint();
+            if (joint.getType() != KDL::Joint::None) {
+                joint_names.push_back(joint.getName());
+            }
+            std::string type = joint.getTypeName();
             if (type.find("Rot") != std::string::npos) {
                 if (ub(types.size()) >= std::numeric_limits<float>::max() &&
                     lb(types.size()) <= std::numeric_limits<float>::lowest())
@@ -140,7 +144,8 @@ namespace TRAC_IK {
             else if (type.find("Trans") != std::string::npos)
                 types.push_back(KDL::BasicJointType::TransJoint);
         }
-
+        
+        assert(joint_names.size() == lb.data.size());
         assert(types.size() == lb.data.size());
 
         initialized = true;

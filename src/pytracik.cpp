@@ -93,6 +93,13 @@ int getNrOfJointsInChain(TRAC_IK::TRAC_IK& t) {
 	return (int)chain.getNrOfJoints();
 }
 
+
+std::vector<std::string> getJointNames(TRAC_IK::TRAC_IK& t) {
+    std::vector<std::string> names;
+    t.getKDLJointNames(names);
+    return names;
+}
+
 std::vector<double> getLowerBoundLimits(TRAC_IK::TRAC_IK& t){
   KDL::JntArray lb_;
   KDL::JntArray ub_;
@@ -153,9 +160,10 @@ PYBIND11_MODULE(pytracik, m) {
           py::arg("qx"), py::arg("qy"), py::arg("qz"), py::arg("qw"),
           py::arg("bx") = 0.0, py::arg("by") = 0.0, py::arg("bz") = 0.0,
           py::arg("brx") = 0.0, py::arg("bry") = 0.0, py::arg("brz") = 0.0)
-    .def("get_num_joints", &getNrOfJointsInChain).
-    def("get_joint_lower_bounds", &getLowerBoundLimits).
-    def("get_joint_upper_bounds", &getUpperBoundLimits).
-    def("set_joint_limits", &setKDLLimits).
-    def("fk", &JntToCart);
+    .def("get_num_joints", &getNrOfJointsInChain)
+    .def("get_joint_lower_bounds", &getLowerBoundLimits)
+    .def("get_joint_upper_bounds", &getUpperBoundLimits)
+    .def("get_joint_names", &getJointNames)
+    .def("set_joint_limits", &setKDLLimits)
+    .def("fk", &JntToCart);
 }

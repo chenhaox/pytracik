@@ -127,6 +127,14 @@ class TracIK(object):
         return pytracik.get_num_joints(self._ik_solver)
 
     @property
+    def joint_names(self):
+        """
+        Get the joint names in the order of the joint values.
+        :return: List of joint names.
+        """
+        return pytracik.get_joint_names(self._ik_solver)
+
+    @property
     def joint_limits(self):
         """
         Return lower bound limits and upper bound limits for all the joints

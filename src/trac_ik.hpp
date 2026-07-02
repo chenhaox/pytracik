@@ -65,6 +65,11 @@ namespace TRAC_IK {
             ub_ = ub;
             return initialized;
         }
+        
+        bool getKDLJointNames(std::vector<std::string> &joint_names_) {
+            joint_names_ = joint_names;
+            return initialized;
+        }
 
         // Requires a previous call to CartToJnt()
         bool getSolutions(std::vector<KDL::JntArray> &solutions_) {
@@ -109,6 +114,7 @@ namespace TRAC_IK {
         double eps;
         double maxtime;
         SolveType solvetype;
+        std::vector<std::string> joint_names;
 
         std::unique_ptr<NLOPT_IK::NLOPT_IK> nl_solver;
         std::unique_ptr<KDL::ChainIkSolverPos_TL> iksolver;

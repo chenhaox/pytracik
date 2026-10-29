@@ -53,6 +53,11 @@ src_files = [
 _system = platform.system()
 
 if _system == "Linux":
+    # Support Debian multiarch and source-built manylinux dependencies.
+    multiarch = sysconfig.get_config_var("MULTIARCH")
+    linux_library_dirs = ["/usr/local/lib64", "/usr/local/lib", "/usr/lib64", "/usr/lib"]
+    if multiarch:
+        linux_library_dirs.insert(0, f"/usr/lib/{multiarch}")
     python_include = sysconfig.get_paths()["include"]
     python_library = sysconfig.get_config_var('LDLIBRARY')
     python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
@@ -68,13 +73,16 @@ if _system == "Linux":
             include_dirs=[
                 pybind11.get_include(),
                 python_include,
+                "/usr/local/include",
+                "/usr/local/include/eigen3",
                 "/usr/include/eigen3",
                 "/usr/include/orocos/kdl",
                 "/usr/include/",
                 "/usr/include/boost",
             ],
-            libraries=['nlopt', 'orocos-kdl', 'boost_date_time', 'boost_system', 'boost_thread'],
-            library_dirs=['/usr/lib/x86_64-linux-gnu', '/usr/lib64'],
+            # The Boost facilities used by this extension are header-only.
+            libraries=['nlopt', 'orocos-kdl'],
+            library_dirs=linux_library_dirs,
             language='c++',
             extra_compile_args=['-std=c++17'],
         ),
@@ -99,7 +107,7 @@ elif _system == "Darwin":
                 f"{kdl_prefix}/include",
                 f"{homebrew_prefix}/include/eigen3",
             ],
-            libraries=['nlopt', 'orocos-kdl', 'boost_date_time', 'boost_thread', python_lib],
+            libraries=['nlopt', 'orocos-kdl'],
             library_dirs=[
                 f"{homebrew_prefix}/lib",
                 f"{kdl_prefix}/lib",

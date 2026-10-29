@@ -1,0 +1,101 @@
+name: Build distributions
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sdist:
+    name: Source distribution
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate release tag
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import ast, os
+          from pathlib import Path
+          version = ast.literal_eval(Path("trac_ik/version.py").read_text().split("=", 1)[1].strip())
+          assert os.environ["RELEASE_TAG"] == "v" + version, "Tag and package version differ"
+          PY
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-all-dev libeigen3-dev liborocos-kdl-dev libnlopt-dev libnlopt-cxx-dev
+          python -m pip install build
+      - name: Build and test source distribution
+        run: |
+          python -m build --sdist
+          python -m pip install dist/*.tar.gz
+          python -m unittest discover -s tests -v
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+          if-no-files-found: error
+
+  wheels:
+    name: Wheels (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            arch: AMD64
+            target: windows-x86_64
+          - os: ubuntu-24.04
+            arch: x86_64
+            target: linux-x86_64
+          - os: ubuntu-24.04-arm
+            arch: aarch64
+            target: linux-aarch64
+          - os: macos-15-intel
+            arch: x86_64
+            target: macos-x86_64
+          - os: macos-15
+            arch: arm64
+            target: macos-arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build, repair and test native wheels
+        uses: pypa/cibuildwheel@v4.3.4
+        env:
+          CIBW_ARCHS: ${{ matrix.arch }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.target }}
+          path: wheelhouse/*.whl
+          if-no-files-found: error
+
+  verify:
+    name: Verify distribution coverage
+    needs: [sdist, wheels]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Verify metadata, architecture coverage and bundled libraries
+        run: |
+          python -m pip install twine
+          python -m twine check dist/*
+          python .github/scripts/verify_distributions.py dist

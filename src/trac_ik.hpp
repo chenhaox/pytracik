@@ -139,6 +139,8 @@ namespace TRAC_IK {
 
         bool unique_solution(const KDL::JntArray &sol);
 
+        bool valid_solution(const KDL::JntArray &solution, const KDL::Frame &target);
+
         inline static double fRand(double min, double max) {
             double f = (double) rand() / RAND_MAX;
             return min + f * (max - min);

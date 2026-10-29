@@ -50,6 +50,9 @@ Output:
 
 # 📦 Installation
 
+Version 0.0.4 fixes successful IK results outside bounded joint limits, including
+the boundary-seed case in [issue #13](https://github.com/chenhaox/pytracik/issues/13).
+
 ## ⚡ Install from PyPI (recommended)
 
 ### 🐧 Linux (Ubuntu / Debian)
@@ -68,6 +71,34 @@ pip install pytracik
 ```bash
 pip install pytracik
 ```
+
+## Linux ARM64 / aarch64 wheels
+
+The release workflow builds and tests Linux x86_64 and aarch64 wheels on separate
+native GitHub runners. Linux wheels target glibc 2.28 or newer and bundle KDL and
+NLopt. ARM64 Linux requires an aarch64 wheel; macOS `arm64` wheels cannot be used
+on Linux. The 0.0.3 release did not include Linux aarch64 wheels.
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install --only-binary=:all: "pytracik==0.0.4"
+```
+
+Wheels cover CPython 3.9–3.13 on Windows x86_64, Linux x86_64/aarch64 and macOS
+Intel; macOS ARM64 covers CPython 3.10–3.13. macOS wheels require macOS 15 or newer.
+32-bit ARM and musl-based Linux (for example Alpine) require a source build.
+
+## Building distributions on GitHub
+
+Branch pushes and pull requests run the shared `Build distributions` workflow. It
+builds a source archive and native wheels for every supported platform, installs
+each repaired wheel in an isolated environment, and runs the joint-limit regression
+tests. CI checks that all 24 expected wheels and their runtime libraries exist.
+Download the `wheels-*` artifacts from a workflow run to try a build before release.
+
+To publish, update `trac_ik/version.py` and push the matching tag (for example
+`v0.0.4`). `Publish to PyPI` builds and verifies every platform before publishing,
+using the repository's `pypi` environment and PyPI Trusted Publishing configuration.
 
 ## 🛠️ Manual Installation (from source)
 1. Download this library and enter the project directory

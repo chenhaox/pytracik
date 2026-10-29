@@ -30,7 +30,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #include "trac_ik.hpp"
+#include <algorithm>
 #include <boost/date_time.hpp>
+#include <cmath>
 #include <Eigen/Geometry>
 #include <limits>
 #include "kdl_parser.hpp"
@@ -74,7 +76,7 @@ namespace TRAC_IK {
             joint = robot_model.getJoint(chain_segs[i].getJoint().getName());
             if (joint->type != urdf::UNKNOWN && joint->type != urdf::FIXED) {
                 joint_num++;
-                float lower, upper;
+                double lower, upper;
                 int hasLimits;
                 if (joint->type != urdf::CONTINUOUS) {
                     if (joint->safety) {
@@ -156,19 +158,39 @@ namespace TRAC_IK {
     }
 
     inline void normalizeAngle(double& val, const double& min, const double& max) {
+        if (!std::isfinite(val))
+            return;
+
+        // Snap roundoff at a limit before attempting a full revolution. Pose
+        // accuracy is checked again before accepting the normalized solution.
+        const double tolerance = 32 * std::numeric_limits<double>::epsilon() *
+            std::max(1.0, std::max(std::abs(min), std::abs(max)));
+        if (val >= min - tolerance && val <= max + tolerance) {
+            val = std::clamp(val, min, max);
+            return;
+        }
+
+        double wrapped = val;
         if (val > max) {
             //Find actual angle offset
             double diffangle = fmod(val - max, 2 * M_PI);
-            // Add that to upper bound and go back a full rotation
-            val = max + diffangle - 2 * M_PI;
+            wrapped = max + diffangle;
+            if (wrapped > max + tolerance)
+                wrapped -= 2 * M_PI;
         }
 
-        if (val < min) {
+        else if (val < min) {
             //Find actual angle offset
             double diffangle = fmod(min - val, 2 * M_PI);
-            // Add that to upper bound and go back a full rotation
-            val = min - diffangle + 2 * M_PI;
+            wrapped = min - diffangle;
+            if (wrapped < min - tolerance)
+                wrapped += 2 * M_PI;
         }
+
+        // A bounded joint may have no equivalent angle inside its interval.
+        // Leave such a value invalid so the candidate will be rejected.
+        if (wrapped >= min - tolerance && wrapped <= max + tolerance)
+            val = std::clamp(wrapped, min, max);
     }
 
     inline void normalizeAngle(double& val, const double& target) {
@@ -222,6 +244,8 @@ namespace TRAC_IK {
                     normalize_seed(q_init, q_out);
                     break;
                 }
+            }
+            if (RC >= 0 && valid_solution(q_out, p_in)) {
                 mtx_.lock();
                 if (unique_solution(q_out)) {
                     solutions.push_back(q_out);
@@ -264,6 +288,35 @@ namespace TRAC_IK {
         return true;
     }
 
+
+    bool TRAC_IK::valid_solution(const KDL::JntArray& solution, const KDL::Frame& target) {
+        if (solution.rows() != lb.rows())
+            return false;
+
+        for (unsigned int i = 0; i < solution.rows(); ++i) {
+            if (!std::isfinite(solution(i)))
+                return false;
+            if (types[i] != KDL::BasicJointType::Continuous &&
+                (solution(i) < lb(i) || solution(i) > ub(i)))
+                return false;
+        }
+
+        // Normalization can change a candidate after either solver succeeds.
+        // Use a local FK solver because both worker threads validate candidates.
+        KDL::ChainFkSolverPos_recursive fk_solver(chain);
+        KDL::Frame actual;
+        if (fk_solver.JntToCart(solution, actual) < 0)
+            return false;
+
+        KDL::Twist error = KDL::diffRelative(target, actual);
+        for (unsigned int i = 0; i < 6; ++i) {
+            if (!std::isfinite(error(i)))
+                return false;
+            if (std::abs(error(i)) <= std::abs(bounds(i)))
+                error(i) = 0;
+        }
+        return KDL::Equal(error, KDL::Twist::Zero(), eps);
+    }
 
     void TRAC_IK::normalize_seed(const KDL::JntArray& seed, KDL::JntArray& solution) {
         // Make sure rotational joint values are within 1 revolution of seed; then

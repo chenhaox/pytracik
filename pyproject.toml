@@ -40,26 +40,16 @@ Repository = "https://github.com/chenhaox/pytracik"
 version = { attr = "trac_ik.version.__version__" }
 
 [tool.cibuildwheel]
+archs = ["native"]
+test-command = 'python -m unittest discover -s "{project}/tests" -v'
 build = "cp39-* cp310-* cp311-* cp312-* cp313-*"
 skip = "*-musllinux_* *-win32 *-manylinux_i686 cp39-macosx_arm64"
 
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-aarch64-image = "manylinux_2_28"
-before-all = """\
-  dnf install -y epel-release && \
-  (dnf config-manager --set-enabled crb 2>/dev/null || dnf config-manager --set-enabled powertools) && \
-  dnf install -y boost-devel eigen3-devel orocos-kdl-devel cmake gcc-c++ && \
-  cd /tmp && \
-  curl -L https://github.com/stevengj/nlopt/archive/refs/tags/v2.7.1.tar.gz | tar xz && \
-  cd nlopt-2.7.1 && \
-  export CMAKE_POLICY_VERSION_MINIMUM=3.5 && \
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-    -DNLOPT_PYTHON=OFF -DNLOPT_OCTAVE=OFF \
-    -DNLOPT_MATLAB=OFF -DNLOPT_GUILE=OFF \
-    -DNLOPT_SWIG=OFF . && \
-  make -j$(nproc) && \
-  make install"""
+before-all = 'bash "{project}/.github/scripts/build_linux_dependencies.sh"'
+environment = { LD_LIBRARY_PATH = "/usr/local/lib64:/usr/local/lib:$LD_LIBRARY_PATH" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew install boost eigen nlopt orocos-kdl"

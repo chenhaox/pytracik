@@ -36,7 +36,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <kdl/chainiksolvervel_pinv.hpp>
 
 #ifndef M_PI
-#define M_PI 3.141592538
+#define M_PI 3.141592653589793238462643383279502884
 #endif //M_PI
 
 namespace TRAC_IK {
